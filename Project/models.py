@@ -6,14 +6,16 @@ class Post(models.Model):
     title =models.CharField(max_length=100)
     description = models.TextField()
     likes = models.IntegerField(default=0)
-    added_date = models.DateTimeField(auto_now=True)
+    dislikes = models.IntegerField(default=0)
+    added_date = models.DateTimeField(auto_now_add=True)
+    last_updated = models.DateTimeField(auto_now=True)
 
     def __str__(self) -> str:
         return self.title
 
 class Comment(models.Model):
+    post = models.ForeignKey(Post, on_delete= models.CASCADE, related_name="comment")
     commentText  =  models.TextField()
-    post = models.ForeignKey(Post, on_delete= models.CASCADE, related_name="comment_post")
 
     def __str__(self) -> str:
         return self.commentText

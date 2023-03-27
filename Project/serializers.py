@@ -18,17 +18,14 @@ class PostSerializer(serializers.ModelSerializer):
         model = Post
         fields = "__all__"
 
-    post_comment  = serializers.SerializerMethodField()
+    comment  = CommentSerializer(many=True, read_only=True)
     images =  PostImageSerializers(many=True, read_only=True)
+
+    #field to post images to database
     uploaded_images = serializers.ListField(
         child=serializers.ImageField(allow_empty_file=False, use_url=False),
         write_only=True
     )
-
-    def get_post_comment(self, obj):
-        Post_obj = Comment.objects.filter(post_id = obj.id)
-        serializer = CommentSerializer(Post_obj, many = True)
-        return serializer.data
     
     def create(self, validated_data):
         uploaded_images = validated_data.pop("uploaded_images")
