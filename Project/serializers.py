@@ -7,10 +7,20 @@ class PostImageSerializers(serializers.ModelSerializer):
         fields = ["id", "image"]
 
 class CommentSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Comment
-        fields = ["id", "commentText"]
-        
+        fields = "__all__"
+
+    post= serializers.IntegerField(write_only = True)
+
+    def create(self, validated_data):
+        print(validated_data)
+        post_obj = Post.objects.get(id=validated_data["post"])
+        comment = Comment.objects.create(post = post_obj, commentText=validated_data["commentText"])  
+        return comment
+
+
 class PostSerializer(serializers.ModelSerializer):
     
     class Meta:
@@ -35,4 +45,7 @@ class PostSerializer(serializers.ModelSerializer):
             PostImage.objects.create(post = post, image=image)
 
         return post
+    
+    
+
     
