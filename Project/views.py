@@ -1,6 +1,7 @@
-from rest_framework.decorators import APIView
-from Project.serializers import PostSerializer
-from Project.models import Post
+from rest_framework.decorators import APIView, api_view
+from rest_framework.viewsets import ModelViewSet
+from Project.serializers import PostSerializer, CommentSerializer
+from Project.models import Post, Comment
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.parsers import MultiPartParser, FormParser
@@ -34,6 +35,7 @@ class PostAPI(APIView):
             return Response(serializer.data)
         else:
             return Response(serializer.errors)
+
     
     # def put(self, request):
     #     data = request.data
@@ -61,3 +63,14 @@ class PostAPI(APIView):
     #     obj.delete()
     #     return Response({'message':'Post deleted'})
     
+
+class CommentAPI(APIView):
+    def patch(self, request, pk):
+        data = request.data
+        post = Post.objects.get(id = pk)
+        serializer = PostSerializer(post, data= data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        else:
+            return Response(serializer.errors)

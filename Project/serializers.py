@@ -26,7 +26,7 @@ class PostSerializer(serializers.ModelSerializer):
         child=serializers.ImageField(allow_empty_file=False, use_url=False),
         write_only=True
     )
-    
+
     def create(self, validated_data):
         uploaded_images = validated_data.pop("uploaded_images")
         post = Post.objects.create(**validated_data)
